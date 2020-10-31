@@ -1,22 +1,53 @@
-let availableHours = ["3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00"];
+let timeId = $(".timeId")
+let saveBtnEl = $('.savebtn')
+let hourValue = 9
+let currentHour = new Date().getHours();
 //displays current date 
-let today = new Date().toLocaleDateString()
-$("#currentDay").text(today)
+let today = new Date().toLocaleDateString();
+$("#currentDay").text(today);
 
-// displays input field times available hours
-for (i = 0; i < availableHours.length; i++) {
-    $(".container").append(`
-    <div class="row border border-dark">
-    <div class="col-sm-1 text-center">` +
-      availableHours[i] +
-    `</div>
-    <div class="col-sm-10 text-center">
-      <input type="text" class="form-control" placeholder="Task To Do:">
-    </div>
-    <div class="col-sm-1 text-center">
-      <button type="button" class="btn btn-primary">Save</button>
-    </div>
-  </div>`)
+
+// checks time and sets css classes
+timeId.each(function () {
+  $(this).attr("data-value", hourValue);
+  hourValue++
+ if (parseInt($(this).attr("data-value")) > currentHour){
+  $(this).addClass("future");
+} else if ( parseInt($(this).attr("data-value")) < currentHour){
+  $(this).addClass("past");
+} else {
+  $(this).addClass("present");
+} 
+})
+// adds values to an array for local storage
+saveBtnEl.click(function(){
+let textValArr = [
+  $('#textval0').val(), 
+  $('#textval1').val(), 
+  $('#textval2').val(), 
+  $('#textval3').val(), 
+  $('#textval4').val(), 
+  $('#textval5').val(), 
+  $('#textval6').val(), 
+  $('#textval7').val(), 
+  $('#textval8').val()
+];  
+// sets item to local storage
+localStorage.setItem("savedtext", JSON.stringify(textValArr));
+})
+// gets local storage string and parses said string
+let getStorage = localStorage.getItem("savedtext") || "[]";
+let storageParse = JSON.parse(getStorage);
+function getLocalData(){
+$('#textval0').val(storageParse[0] || ""), 
+$('#textval1').val(storageParse[1] || ""), 
+$('#textval2').val(storageParse[2] || ""), 
+$('#textval3').val(storageParse[3] || ""), 
+$('#textval4').val(storageParse[4] || ""), 
+$('#textval5').val(storageParse[5] || ""), 
+$('#textval6').val(storageParse[6] || ""), 
+$('#textval7').val(storageParse[7] || ""), 
+$('#textval8').val(storageParse[8] || "")
 }
-
-
+// start as page is loaded
+getLocalData()
